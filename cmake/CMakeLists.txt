@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8.9)
+project( blob_track)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( blob_track blob_track.cpp )
+target_link_libraries( blob_track ${OpenCV_LIBS} cvblob)
