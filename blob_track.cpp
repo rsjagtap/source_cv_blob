@@ -39,12 +39,12 @@ const cv::Scalar SCALAR_RED = cv::Scalar(0.0, 0.0, 255.0);
 
 int main(int argc, char* argv[])
 {
-if(argc != 2)
+if(argc != 3)
 {
     cout
     << "--------------------------------------------------------------------------" << endl
     << "Usage:"                                                                     << endl
-    << "./blob_track video_filename"			                            << endl
+    << "./blob_track video_filename cascade.xml"			                            << endl
     << "--------------------------------------------------------------------------" << endl
     << endl;
 	
@@ -127,6 +127,13 @@ exit(1);
 	//morphology element
 	Mat element = getStructuringElement(MORPH_RECT, Size(7, 7), Point(3,3) );   
 
+        CascadeClassifier car_cascade;
+        vector<Rect> cars;
+
+        if(!car_cascade.load(argv[2])){
+                cout<< " Error while loading cascade file for face" << endl;
+                return 1;
+        }
 
 	//unconditional loop   
 	while (stream1.isOpened()) {   
@@ -157,6 +164,25 @@ exit(1);
 		cv::GaussianBlur(imgFrame1Copy, imgFrame1Copy, cv::Size(5, 5), 0);
 		cv::GaussianBlur(imgFrame2Copy, imgFrame2Copy, cv::Size(5, 5), 0);
 
+
+std::cout<<"working 1"<<std::endl;
+//
+//                equalizeHist(imgFrame1Copy, imgFrame1Copy);
+//std::cout<<"working 2"<<std::endl;
+                car_cascade.detectMultiScale(imgFrame2Copy, cars, 1.11, 4, 0 | CASCADE_SCALE_IMAGE, Size(10,10));
+//std::cout<<"working 3"<<std::endl;
+		for(int i = 0; i<cars.size(); i++){
+
+                        Point pt1(cars[i].x + cars[i].width, cars[i].y+cars[i].height);
+                        Point pt2(cars[i].x, cars[i].y);
+
+
+                if(!cars.empty()){
+std::cout<<"working 4"<<std::endl;
+rectangle(frame1, pt1, pt2, Scalar(0,255,0),2, 8, 0);
+
+}}
+//cv::imshow("car", frame1);
 
 				cv::absdiff(imgFrame1Copy, imgFrame2Copy, imgDifference);
 
